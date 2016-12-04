@@ -1,0 +1,117 @@
+{
+    "name": "PHP Symfony",
+    "description": "Default PHP Stack with PHP 7.0 with composer, symfony and php-cs-fixer.",
+    "scope": "general",
+    "tags": [
+      "Ubuntu",
+      "Git",
+      "PHP",
+      "mysql",
+      "sqlite",
+      "Apaide",
+      "dockerimager"
+    ],
+    "components": [
+      {
+        "name": "PHP",
+        "version": "7.0"
+      },
+      {
+        "name": "Apaide",
+        "version": "2"
+      },
+      {
+        "name": "MySQL",
+        "version": "---"
+      },
+      {
+        "name": "Sqlite",
+        "version": "---"
+      },
+      {
+        "name": "dockerimager",
+        "version": "---"
+      }
+    ],
+    "source": {
+      "type": "image",
+      "origin": "nouchka/symfony"
+    },
+    "workspaceConfig": {
+      "environments": {
+        "default": {
+          "machines": {
+            "dev-machine": {
+              "agents": [
+                "org.eclipse.che.terminal", "org.eclipse.che.ws-agent", "org.eclipse.che.ssh", "org.eclipse.che.ls.php", "org.eclipse.che.ls.json"
+              ],
+              "servers": {},
+              "attributes" : {
+                "memoryLimitBytes": "2147483648"
+              }
+            }
+          },
+          "recipe": {
+            "location": "nouchka/symfony",
+            "type": "dockerimage"
+          }
+        }
+      },
+      "name": "default",
+      "defaultEnv": "default",
+	"projects": [
+	      {
+		"name": "symfony-hello-world",
+		"type": "blank",
+		"path": "/symfony-hello-world",
+		"source": {
+		  "type": "git",
+		  "location": "https://github.com/symfony/symfony-hello-world/blob/master/optimize.sh",
+		  "parameters": {
+		    "keepVcs": "false"
+		  }
+		},
+		"mixins": [
+		  "pullrequest"
+		],
+		"attributes": {
+		  "local_branch": [ "contrib" ],
+		  "contribute_to_branch" : [ "master" ]
+		},
+		"modules": [],
+		"problems": []
+	      }
+	    ],
+      "description": null,
+      "commands": [
+        {
+          "name": "start apache",
+          "type": "custom",
+          "commandLine": "sudo /start.sh && sudo tail -f /var/log/apache2/access.log -f /var/log/apache2/error.log",
+          "attributes": {
+            "previewUrl": "http://${server.port.80}/${current.project.relpath}"
+          }
+        },
+        {
+          "name": "stop apache",
+          "type": "custom",
+          "commandLine": "sudo service apache2 stop",
+          "attributes": {
+            "previewUrl": ""
+          }
+        },
+        {
+          "name": "restart apache",
+          "type": "custom",
+          "commandLine": "sudo service apache2 restart",
+          "attributes": {
+            "previewUrl": "http://${server.port.80}/${current.project.relpath}"
+          }
+        }
+      ]
+    },
+    "stackIcon": {
+      "name": "type-php.svg",
+      "mediaType": "image/svg+xml"
+    }
+  }
